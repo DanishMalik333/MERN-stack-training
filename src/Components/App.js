@@ -1,6 +1,7 @@
 import React from "react";
 import Header from "./Header";
 import ContestPreview from "./ContestPreview";
+import axios from "axios";
 
 class App extends React.Component {
   constructor(props) {
@@ -8,9 +9,14 @@ class App extends React.Component {
   }
   state = {
     pageHeader: "Naming Contests",
+    contests: this.props.initialContests,
   };
   componentDidMount() {
-    // timers, listeners
+    axios.get("/api/contests").then((resp) => {
+      this.setState({
+        contests: resp.data.contests,
+      });
+    });
   }
   componentWillUnmount() {
     // clean timers, listeners
@@ -20,7 +26,7 @@ class App extends React.Component {
       <div className="App">
         <Header message={this.state.pageHeader} />
         <div>
-          {this.props.contests.map((contest) => (
+          {this.state.contests.map((contest) => (
             <ContestPreview {...contest} key={contest.id} />
           ))}
         </div>
